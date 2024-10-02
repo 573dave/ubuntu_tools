@@ -1,0 +1,21 @@
+services:
+  alpine-ssh:
+    image: bigcapital_alpine:latest
+    container_name: bigcapital_alpine
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.alpine-ssh.rule=HostSNI(`SUBDOMAIN.YOURDOMAIN.COM`)"
+      - "traefik.tcp.routers.alpine-ssh.entrypoints=ssh"
+      - "traefik.tcp.services.alpine-ssh.loadbalancer.server.port=22"
+    ports:
+      - "22"
+    environment:
+      # Set your public SSH key here
+      SSH_PUBLIC_KEY: "YOUR_PUBLIC_SSH_KEY"
+    restart: unless-stopped
+
+networks:
+  traefik-network:
+    external: true
